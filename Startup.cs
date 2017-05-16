@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Cors;
 
 namespace SingersWebApi
 {
@@ -29,6 +30,7 @@ namespace SingersWebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ListsContext>(opt => opt.UseInMemoryDatabase());
+            services.AddCors();
             services.AddMvc();
         }
 
@@ -40,6 +42,11 @@ namespace SingersWebApi
 
             var context = app.ApplicationServices.GetService<ListsContext>();
             ListsContext.SeedTestData(context);
+
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
             app.UseMvc();
         }
