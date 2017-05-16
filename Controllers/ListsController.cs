@@ -37,17 +37,19 @@ namespace SingersWebApi.Controllers
 
         // POST lists
         [HttpPost]
-        public async Task Post([FromBody]PostListViewModel value)
+        public async Task<IActionResult> Post([FromBody]PostListViewModel value)
         {
-            value.List.Created = DateTime.Now;
-            value.List.Updated = DateTime.Now;
-            await _context.AddAsync(value);
+            var newList = value.List;
+            newList.Created = DateTime.Now;
+            newList.Updated = DateTime.Now;
+            await _context.AddAsync(newList);
             await _context.SaveChangesAsync();
+            return Ok(newList);
         }
 
         // PUT lists/5
         [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody]PutListViewModel value)
+        public async Task<IActionResult> Put(int id, [FromBody]PutListViewModel value)
         {
             var editedModel = await _context.Lists.FirstAsync(l => l.Id == id);
             editedModel.Name = value.List.Name;
@@ -58,11 +60,12 @@ namespace SingersWebApi.Controllers
             editedModel.IsAlive = value.List.IsAlive;
             editedModel.Updated = DateTime.Now;
             await _context.SaveChangesAsync();
+            return Ok(editedModel);
         }
 
         // PUT lists/5
         [HttpPatch("{id}")]
-        public async Task Patch(int id, [FromBody]PatchListViewModel value)
+        public async Task<IActionResult> Patch(int id, [FromBody]PatchListViewModel value)
         {
             var editedModel = await _context.Lists.FirstAsync(l => l.Id == id);
             editedModel.Name = value.List.Name;
@@ -73,6 +76,7 @@ namespace SingersWebApi.Controllers
             editedModel.IsAlive = value.List.IsAlive;
             editedModel.Updated = DateTime.Now;
             await _context.SaveChangesAsync();
+            return Ok(editedModel);
         }
 
         // DELETE lists/5
